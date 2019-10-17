@@ -1,27 +1,32 @@
-Snake snek;
+Snake[] snek = new Snake[10];
 
 void setup()
 {
   size(500,500);
   colorMode(HSB, 100);
-  float x, y;
-  x = ((float)Math.random() * width);
-  y = ((float)Math.random() * height);
-  int colour = (int)(Math.random() * 100);
-  int size = (int)(Math.random() * 90) + 10;
-  int radius = (int)(Math.random() * 10) + 5;
-  snek = new Snake(x, y, colour, size, radius);
-  
+  for(int i = 0; i < snek.length; i++)
+  {
+    float x, y;
+    x = ((float)Math.random() * width);
+    y = ((float)Math.random() * height);
+    int colour = (int)(Math.random() * 100);
+    int size = (int)(Math.random() * 0) + 10;
+    int radius = (int)(Math.random() * 10) + 5;
+    snek[i] = new Snake(x, y, colour, size, radius);
+  }
 }
 
 float min = 0;
 float max = 0;
 void draw()
 {
-  fill(0, 0, 80);
+  fill(0, 10, 80);
   rect(0, 0, width, height);
-  snek.move();
-  snek.show();
+  for(int i = 0; i < snek.length; i++)
+  {
+    snek[i].move();
+    snek[i].show();
+  }
 }
 
 class Snake {
@@ -83,6 +88,7 @@ class Snake {
     }
     else
       timer--;
+    //if tan same sign; else if cos same sign; else
     
     if(body[0] < 0 )
       v.set((float)Math.random(), v.y);
