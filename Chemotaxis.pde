@@ -1,4 +1,5 @@
-Snake[] snek = new Snake[10];
+Snake[] snek = new Snake[1];
+int fruitX, fruitY;
 
 void setup()
 {
@@ -14,6 +15,8 @@ void setup()
     int radius = (int)(Math.random() * 10) + 5;
     snek[i] = new Snake(x, y, colour, size, radius);
   }
+  fruitX = (int)(Math.random() * width);
+  fruitY = (int)(Math.random() * height);
 }
 
 float min = 0;
@@ -22,6 +25,9 @@ void draw()
 {
   fill(0, 10, 80);
   rect(0, 0, width, height);
+  
+  fill(200, 80, 80);
+  ellipse(fruitX, fruitY, 10,10);
   for(int i = 0; i < snek.length; i++)
   {
     snek[i].move();
@@ -31,8 +37,8 @@ void draw()
 
 class Snake {
   //the snek will continue its current movement until the timer hits 0
-  int timer, snakeWidth, hue, sat, bright, length;
-  float x, y, angle, changeInAngle, speed;
+  int timer, snakeWidth, hue, length;
+  float x, y, changeInAngle, speed, targetAngle;
   PVector v;
   //length is array of ordered pairs
   float[] body;
@@ -72,19 +78,35 @@ class Snake {
             changeInAngle = (float)(Math.random() * 0.4) + 0.1;
             
           //0.5 chance to turn CCW
-          if (Math.random() > 0.5)
+          if (Math.random() > 1.5)
             changeInAngle = -changeInAngle;
             
           //rotation is btwn 1pi/3 and 5pi/3
           float range = abs(4 * PI / 3 / changeInAngle);
           timer = (int)(Math.random() * range + 1 * PI / 3 / abs(changeInAngle));
           
+          //50% chance to set snake to turn until it is going in the general direction of the fruit
+          if (Math.random() > 0.5)
+          {
+            PVector vFruit = new PVector(fruitX - body[0], fruitY - body[1]);
+            targetAngle = vFruit.heading() - (float)(Math.random() - 0.5);
+            timer = -1;
+          }
         }
         else //move straight
         {
           changeInAngle = 0;
           timer = (int)(Math.random() * 20) + 5;
         }
+    }
+    else if(timer < 0) //timer is negative if snake is turning until it is going in the general direction of the fruit
+    {
+      line(body[0], body[1], body[0] + targetAngle.x, body[1]
+      if(v.heading() >= targetAngle - 0.1 && v.heading() <= targetAngle + 0.1)
+        timer = 0;
+      fill(200, 80, 80);
+      rect(20, 20, 20, 20);
+      System.out.println("asdasd");
     }
     else
       timer--;
@@ -118,8 +140,6 @@ class Snake {
       {
         noStroke();
         fill(hue, 30, 100);
-        
-      System.out.println(a);
       }
       for(int i = body.length - 1; i > 1; i --)
         body[i] = body[i-2];
