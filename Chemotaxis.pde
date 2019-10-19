@@ -1,4 +1,5 @@
-Snake[] snek = new Snake[1];
+// add or remove snesk; increase/decrease bias with meter showing levels; set speed into parameter
+Snake[] snek = new Snake[10];
 int fruitX, fruitY;
 
 void setup()
@@ -11,7 +12,7 @@ void setup()
     x = ((float)Math.random() * width);
     y = ((float)Math.random() * height);
     int colour = (int)(Math.random() * 100);
-    int size = (int)(Math.random() * 0) + 10;
+    int size = (int)(Math.random() * 150) + 10;
     int radius = (int)(Math.random() * 10) + 5;
     snek[i] = new Snake(x, y, colour, size, radius);
   }
@@ -23,9 +24,11 @@ float min = 0;
 float max = 0;
 void draw()
 {
-  fill(0, 10, 80);
+  noStroke();
+  fill(0, 5, 100);
   rect(0, 0, width, height);
   
+  stroke(100, 100, 100);
   fill(200, 80, 80);
   ellipse(fruitX, fruitY, 10,10);
   for(int i = 0; i < snek.length; i++)
@@ -35,6 +38,12 @@ void draw()
   }
 }
 
+void mousePressed()
+{
+  fruitX = mouseX;
+  fruitY = mouseY;
+}
+
 class Snake {
   //the snek will continue its current movement until the timer hits 0
   int timer, snakeWidth, hue, length;
@@ -42,6 +51,7 @@ class Snake {
   PVector v;
   //length is array of ordered pairs
   float[] body;
+  PVector vFruit;
   
   Snake(float x0, float y0, int colour, int size, int radius)
   {
@@ -59,6 +69,7 @@ class Snake {
     v.setMag(speed);
     snakeWidth = radius;
     hue = colour;
+    vFruit = new PVector(fruitX - body[0], fruitY - body[1]);
   }
   
   void move()
@@ -68,17 +79,17 @@ class Snake {
     {
         //chance to either turn or move straight
         double chance = Math.random();
-        if(chance > 0.5)
+        if(chance < 0.5)
         {
           //0.4 chance to make a wider turn
-          if(chance > 0.6)
+          if(chance < 0.4)
             changeInAngle = (float)(Math.random() * 0.07) + 0.03;
           else
             //smaller turn
             changeInAngle = (float)(Math.random() * 0.4) + 0.1;
             
           //0.5 chance to turn CCW
-          if (Math.random() > 1.5)
+          if (Math.random() < 0.5)
             changeInAngle = -changeInAngle;
             
           //rotation is btwn 1pi/3 and 5pi/3
@@ -86,10 +97,8 @@ class Snake {
           timer = (int)(Math.random() * range + 1 * PI / 3 / abs(changeInAngle));
           
           //50% chance to set snake to turn until it is going in the general direction of the fruit
-          if (Math.random() > 0.5)
+          if (Math.random() < 0.5)
           {
-            PVector vFruit = new PVector(fruitX - body[0], fruitY - body[1]);
-            targetAngle = vFruit.heading() - (float)(Math.random() - 0.5);
             timer = -1;
           }
         }
@@ -101,12 +110,29 @@ class Snake {
     }
     else if(timer < 0) //timer is negative if snake is turning until it is going in the general direction of the fruit
     {
-      line(body[0], body[1], body[0] + targetAngle.x, body[1]
-      if(v.heading() >= targetAngle - 0.1 && v.heading() <= targetAngle + 0.1)
+      stroke(40, 80, 80);
+      vFruit = new PVector(fruitX - body[0], fruitY - body[1]);
+      float angleOfRot;
+      if ((v.heading() < vFruit.heading() && changeInAngle > 0) ||  (v.heading() > vFruit.heading() && changeInAngle < 0))
+        angleOfRot = abs(v.heading() - vFruit.heading());
+      else 
+      {
+        angleOfRot = 2 * PI - (abs(v.heading() - vFruit.heading()));
+      }
+      
+      if(angleOfRot >  PI)
+      {
+        changeInAngle = -changeInAngle;
+      }
+      //////
+      /*
+      fill(200, 100, 100);
+      rect(0, height / 2, 10, v.heading() * height / 2 / PI);
+      rect(10, height / 2, 20, vFruit.heading() * height / 2 / PI);
+      */
+      ///////
+      if(v.heading() >= vFruit.heading() - 0.25 && v.heading() <= vFruit.heading() + 0.25)
         timer = 0;
-      fill(200, 80, 80);
-      rect(20, 20, 20, 20);
-      System.out.println("asdasd");
     }
     else
       timer--;
@@ -121,7 +147,12 @@ class Snake {
       v.set(v.x, (float)Math.random());
     else if(body[1] > height)
       v.set(v.x, (float)-Math.random());
-    
+      
+    for(int i = body.length - 1; i > 1; i --)
+        body[i] = body[i-2];
+      body[0] += v.x;
+      body[1] += v.y;
+      
     v.setMag(speed);
     v.rotate(changeInAngle);
     
@@ -129,25 +160,21 @@ class Snake {
   
   void show()
   {
+    noStroke();
     for(int a = 2; a >= 1; a--)
     {
       if(a == 2)
       {
-        //stroke(hue, 80, 50);
         fill(hue, 20, 100);
       }
       else
       {
-        noStroke();
         fill(hue, 30, 100);
       }
-      for(int i = body.length - 1; i > 1; i --)
-        body[i] = body[i-2];
-      body[0] += v.x;
-      body[1] += v.y;
       for(int i = 0; i < body.length; i+=2)
         ellipse(body[i] , body[i + 1] , snakeWidth * a, snakeWidth * a);
       
     }
+
   }
 }
