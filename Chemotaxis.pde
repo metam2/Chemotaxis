@@ -1,3 +1,10 @@
+/*//////////
+mag and heading doesnt work.....
+heading atan(vFruit.y/vFruit.x)
+mag x / cos
+
+*/
+
 // add or remove snesk; increase/decrease bias with meter showing levels; set speed into parameter
 Snake[] snek = new Snake[10];
 int fruitX, fruitY;
