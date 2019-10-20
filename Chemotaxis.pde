@@ -147,9 +147,9 @@ class Snake {
       v.set(v.x, -(float)Math.random());
       
     for(int i = body.length - 1; i > 1; i --)
-        body[i] = body[i-2];
-      body[0] += v.x;
-      body[1] += v.y;
+      body[i] = body[i-2];
+    body[0] += v.x;
+    body[1] += v.y;
       
     v.setMag(speed);
     v.rotate(changeInAngle);
