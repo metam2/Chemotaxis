@@ -1,5 +1,5 @@
 // add or remove snesk; increase/decrease bias with meter showing levels; set speed into parameter
-Snake[] snek = new Snake[10];
+Snake[] snek = new Snake[1];
 int fruitX, fruitY;
 
 void setup()
@@ -45,7 +45,8 @@ void mousePressed()
 class Snake {
   //the snek will continue its current movement until the timer hits 0
   int timer, snakeWidth, hue, length;
-  float x, y, changeInAngle, speed, targetAngle;
+  float x, y, changeInAngle, spee, targetAngle;
+	
   PVector v;
   //length is array of ordered pairs
   float[] body;
@@ -53,8 +54,8 @@ class Snake {
   
   Snake(float x0, float y0, int colour, int size, int radius)
   {
-    x = x0;
-    y = y0;
+    x = 250;
+    y = 250;
     body = new float[size * 2];
     for(int i = 0; i < body.length; i+=2)
     {
@@ -63,8 +64,10 @@ class Snake {
     }
     v = new PVector((float)Math.random(), (float)Math.random());
     //sets random speed of snek btwn [0.5, 2.5)
-    speed = (float)Math.random() * 2 + 0.5;
-    v.setMag(speed);
+		spee = 3;
+		
+		println(spee + 1)
+    v.setMag(spee);
     snakeWidth = radius;
     hue = colour;
     vFruit = new PVector(fruitX - body[0], fruitY - body[1]);
@@ -95,7 +98,7 @@ class Snake {
           timer = (int)(Math.random() * range + 1 * PI / 3 / abs(changeInAngle));
           
           //50% chance to set snake to turn until it is going in the general direction of the fruit
-          if (Math.random() < 0.5)
+          if (Math.random() < 0)
           {
             timer = -1;
           }
@@ -136,22 +139,50 @@ class Snake {
       timer--;
     //if tan same sign; else if cos same sign; else
     
-    if(body[0] < 0 )
+    v.setMag(spee);
+		
+		
+    if(body[0] < 200 )
       v.set((float)Math.random(), v.y);
-    else if (body[0] > width)
+		
+    else if (body[0] > 300)
+		{
       v.set(-(float)Math.random(), v.y);
-            
-    if(body[1] < 0)
+		}
+    if(body[1] < 200)
+		{
       v.set(v.x, (float)Math.random());
-    else if(body[1] > height)
+		}
+    else if(body[1] > 300)
+		{
       v.set(v.x, -(float)Math.random());
-      
+		}
+		if(abs(v.x) > 10 || abs(v.y) > 10)
+		println(v);
+		if(abs(v.x) > 10 || abs(v.y) > 10)
+			println(v.mag());
+		/*
+    if(body[0] < 200 )
+      v.set(v.x, v.y);
+    else if (body[0] > 300)
+      v.set(v.x, v.y);
+  	println(v);
+    if(body[1] < 200)
+      v.set(v.x, v.y);
+    else if(body[1] > 400)
+      v.set(v.x, v.y);
+      */
     for(int i = body.length - 1; i > 1; i --)
+		{
         body[i] = body[i-2];
+		}
+		v.normalize();
       body[0] += v.x;
       body[1] += v.y;
       
-    v.setMag(speed);
+		//println(spee + "!")
+    v.setMag(spee);
+		//println(v.mag());
     v.rotate(changeInAngle);
     
   }
