@@ -107,7 +107,7 @@ class Snake {
           timer = (int)(Math.random() * range + 1 * PI / 3 / abs(changeInAngle));
           
           //50% chance to set snake to turn until it is going in the general direction of the fruit
-          if (Math.random() < 0.5)
+          if (Math.random() < 1.5)
           {
             timer = -1;
           }
@@ -141,6 +141,12 @@ class Snake {
       rect(10, height / 2, 20, vFruit.heading() * height / 2 / PI);
       */
       ///////
+      
+      if(atan(v.y/v.x) != v.heading())
+        System.out.println(atan(v.y/v.x) - v.heading());
+      float angle = atan(v.y/v.x);
+      if (v.x < 0 && v.y < 0)
+        angle -= PI;
       if(atan(v.y/v.x) >= atan(vFruit.y/vFruit.x) - 0.25 && atan(v.y/v.x) <= atan(vFruit.y/vFruit.x) + 0.25)
         timer = 0;
     }
