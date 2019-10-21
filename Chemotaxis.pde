@@ -1,12 +1,14 @@
 /*//////////
 mag and heading doesnt work.....
 heading atan(vFruit.y/vFruit.x)
-mag x / cos
+atan(v.y/v.x);
+v.normalize();
+v.set(v.x * speed, v.y * speed);
 
 */
 
 // add or remove snesk; increase/decrease bias with meter showing levels; set speed into parameter
-Snake[] snek = new Snake[10];
+Snake[] snek = new Snake[1];
 int fruitX, fruitY;
 
 void setup()
@@ -71,7 +73,10 @@ class Snake {
     v = new PVector((float)Math.random(), (float)Math.random());
     //sets random speed of snek btwn [0.5, 2.5)
     speed = (float)Math.random() * 2 + 0.5;
-    v.setMag(speed);
+    speed = 2.5;
+    v.normalize();
+    v.set(v.x * speed, v.y * speed);
+
     snakeWidth = radius;
     hue = colour;
     vFruit = new PVector(fruitX - body[0], fruitY - body[1]);
@@ -118,11 +123,11 @@ class Snake {
       stroke(40, 80, 80);
       vFruit = new PVector(fruitX - body[0], fruitY - body[1]);
       float angleOfRot;
-      if ((v.heading() < vFruit.heading() && changeInAngle > 0) ||  (v.heading() > vFruit.heading() && changeInAngle < 0))
-        angleOfRot = abs(v.heading() - vFruit.heading());
+      if ((atan(v.y/v.x) < atan(vFruit.y/vFruit.x) && changeInAngle > 0) ||  (atan(v.y/v.x) > atan(vFruit.y/vFruit.x) && changeInAngle < 0))
+        angleOfRot = abs(atan(v.y/v.x) - atan(vFruit.y/vFruit.x));
       else 
       {
-        angleOfRot = 2 * PI - (abs(v.heading() - vFruit.heading()));
+        angleOfRot = 2 * PI - (abs(atan(v.y/v.x) - atan(vFruit.y/vFruit.x)));
       }
       
       if(angleOfRot >  PI)
@@ -136,7 +141,7 @@ class Snake {
       rect(10, height / 2, 20, vFruit.heading() * height / 2 / PI);
       */
       ///////
-      if(v.heading() >= vFruit.heading() - 0.25 && v.heading() <= vFruit.heading() + 0.25)
+      if(atan(v.y/v.x) >= atan(vFruit.y/vFruit.x) - 0.25 && atan(v.y/v.x) <= atan(vFruit.y/vFruit.x) + 0.25)
         timer = 0;
     }
     else
@@ -157,8 +162,9 @@ class Snake {
       body[i] = body[i-2];
     body[0] += v.x;
     body[1] += v.y;
-      
-    v.setMag(speed);
+    
+    v.normalize();
+    v.set(v.x * speed, v.y * speed);
     v.rotate(changeInAngle);
     
   }
