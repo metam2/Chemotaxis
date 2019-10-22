@@ -1,6 +1,6 @@
 /*//////////
 mag and heading doesnt work.....
-heading atan(vFruit.y/vFruit.x)
+heading atan(vFood.y/vFood.x)
 atan(v.y/v.x);
 v.normalize();
 v.set(v.x * speed, v.y * speed);
@@ -9,7 +9,7 @@ v.set(v.x * speed, v.y * speed);
 
 // add or remove snesk; increase/decrease bias with meter showing levels; set speed into parameter
 Snake[] snek = new Snake[1];
-int fruitX, fruitY;
+int FoodX, FoodY;
 
 void setup()
 {
@@ -25,8 +25,8 @@ void setup()
     int radius = (int)(Math.random() * 10) + 5;
     snek[i] = new Snake(x, y, colour, size, radius);
   }
-  fruitX = (int)(Math.random() * width);
-  fruitY = (int)(Math.random() * height);
+  FoodX = (int)(Math.random() * width);
+  FoodY = (int)(Math.random() * height);
 }
 
 void draw()
@@ -37,7 +37,7 @@ void draw()
   
   stroke(100, 100, 100);
   fill(200, 80, 80);
-  ellipse(fruitX, fruitY, 10,10);
+  ellipse(FoodX, FoodY, 10,10);
   for(int i = 0; i < snek.length; i++)
   {
     snek[i].move();
@@ -47,8 +47,8 @@ void draw()
 
 void mousePressed()
 {
-  fruitX = mouseX;
-  fruitY = mouseY;
+  FoodX = mouseX;
+  FoodY = mouseY;
 }
 
 class Snake {
@@ -58,7 +58,7 @@ class Snake {
   PVector v;
   //length is array of ordered pairs
   float[] body;
-  PVector vFruit;
+  PVector vFood;
   
   Snake(float x0, float y0, int colour, int size, int radius)
   {
@@ -79,7 +79,7 @@ class Snake {
 
     snakeWidth = radius;
     hue = colour;
-    vFruit = new PVector(fruitX - body[0], fruitY - body[1]);
+    vFood = new PVector(FoodX - body[0], FoodY - body[1]);
   }
   
   void move()
@@ -106,7 +106,7 @@ class Snake {
           float range = abs(4 * PI / 3 / changeInAngle);
           timer = (int)(Math.random() * range + 1 * PI / 3 / abs(changeInAngle));
           
-          //50% chance to set snake to turn until it is going in the general direction of the fruit
+          //50% chance to set snake to turn until it is going in the general direction of the Food
           if (Math.random() < 1.5)
           {
             timer = -1;
@@ -118,16 +118,20 @@ class Snake {
           timer = (int)(Math.random() * 20) + 5;
         }
     }
-    else if(timer < 0) //timer is negative if snake is turning until it is going in the general direction of the fruit
+    else if(timer < 0) //timer is negative if snake is turning until it is going in the general direction of the Food
     {
       stroke(40, 80, 80);
-      vFruit = new PVector(fruitX - body[0], fruitY - body[1]);
+      vFood = new PVector(FoodX - body[0], FoodY - body[1]);
       float angleOfRot;
-      if ((atan(v.y/v.x) < atan(vFruit.y/vFruit.x) && changeInAngle > 0) ||  (atan(v.y/v.x) > atan(vFruit.y/vFruit.x) && changeInAngle < 0))
-        angleOfRot = abs(atan(v.y/v.x) - atan(vFruit.y/vFruit.x));
+      
+      float vAngle = getAngle(v.x, v.y);
+      float foodAngle = getAngle(vFood.x, vFood.y);
+        
+      if ((vAngle < foodAngle && changeInAngle > 0) ||  (vAngle > foodAngle && changeInAngle < 0))
+        angleOfRot = abs(vAngle - foodAngle);
       else 
       {
-        angleOfRot = 2 * PI - (abs(atan(v.y/v.x) - atan(vFruit.y/vFruit.x)));
+        angleOfRot = 2 * PI - (vAngle - foodAngle);
       }
       
       if(angleOfRot >  PI)
@@ -138,17 +142,30 @@ class Snake {
       /*
       fill(200, 100, 100);
       rect(0, height / 2, 10, v.heading() * height / 2 / PI);
-      rect(10, height / 2, 20, vFruit.heading() * height / 2 / PI);
+      rect(10, height / 2, 20, vFood.heading() * height / 2 / PI);
       */
       ///////
       
-      if(atan(v.y/v.x) != v.heading())
-        System.out.println(atan(v.y/v.x) - v.heading());
-      float angle = atan(v.y/v.x);
+      if(vAngle != v.heading())
+        //System.out.println(vAngle - v.heading());
+      /*
+      float vAngle = atan(v.y/v.x);
+      float foodAngle = atan(vFood.x/vFood.y);
       if (v.x < 0 && v.y < 0)
-        angle -= PI;
-      if(atan(v.y/v.x) >= atan(vFruit.y/vFruit.x) - 0.25 && atan(v.y/v.x) <= atan(vFruit.y/vFruit.x) + 0.25)
+        vAngle -= PI;
+      else if(v.x < 0 && v.y > 0)
+        vAngle += PI;
+      if (vFood.x < 0 && vFood.y < 0)
+        foodAngle -= PI;
+      else if(vFood.x < 0 && vFood.y > 0)
+        foodAngle += PI;
+        */
+        
+      //if(atan(v.y/v.x) >= atan(vFood.y/vFood.x) - 0.25 && atan(v.y/v.x) <= atan(vFood.y/vFood.x) + 0.25)
+      if(vAngle >= foodAngle - 0.25 && vAngle <= foodAngle + 0.25)
+      {
         timer = 0;
+      }
     }
     else
       timer--;
@@ -189,9 +206,20 @@ class Snake {
         fill(hue, 30, 100);
       }
       for(int i = 0; i < body.length; i+=2)
-        ellipse(body[i] , body[i + 1] , snakeWidth * a, snakeWidth * a);
+        ellipse((int)body[i] , (int)body[i + 1] , snakeWidth * a, snakeWidth * a);
       
     }
 
+  }
+  
+  float getAngle(float xComp, float yComp)
+  {
+    float angle = atan(yComp/xComp);
+    if (xComp <= 0 && yComp <= 0)
+      angle -= PI;
+    else if(xComp <= 0 && yComp >= 0)
+      angle += PI;
+      
+    return angle;
   }
 }
