@@ -207,7 +207,7 @@ class Snake {
         fill(hue, 30, 100);
       }
       for(int i = 0; i < body.length; i+=2)
-        ellipse((int)body[i] , (int)body[i + 1] , snakeWidth * a, snakeWidth * a);
+        ellipse((int)body[i] , (int)body[i + 1] , (int)(snakeWidth * a), (int)(snakeWidth * a));
       
     }
 
