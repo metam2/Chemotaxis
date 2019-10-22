@@ -186,9 +186,10 @@ class Snake {
     body[0] += v.x;
     body[1] += v.y;
     
+    v.set(cos(getAngle(v.x, v.y) + changeInAngle), sin(getAngle(v.x, v.y) + changeInAngle));
     v.normalize();
     v.set(v.x * speed, v.y * speed);
-    v.rotate(changeInAngle);
+    //v.rotate(changeInAngle);
     
   }
   
