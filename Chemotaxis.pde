@@ -10,6 +10,7 @@ v.set(v.x * speed, v.y * speed);
 // add or remove snesk; increase/decrease bias with meter showing levels; set speed into parameter
 Snake[] snek = new Snake[1];
 int FoodX, FoodY;
+float bias = 0.5;
 
 void setup()
 {
@@ -17,6 +18,7 @@ void setup()
   colorMode(HSB, 100);
   for(int i = 0; i < snek.length; i++)
   {
+    /*
     float x, y;
     x = ((float)Math.random() * width);
     y = ((float)Math.random() * height);
@@ -24,6 +26,8 @@ void setup()
     int size = (int)(Math.random() * 150) + 10;
     int radius = (int)(Math.random() * 10) + 5;
     snek[i] = new Snake(x, y, colour, size, radius);
+    */
+    snek[i] = new Snake();
   }
   FoodX = (int)(Math.random() * width);
   FoodY = (int)(Math.random() * height);
@@ -43,6 +47,17 @@ void draw()
     snek[i].move();
     snek[i].show();
   }
+
+  if(keyPressed)
+  {
+    if(key == 'q' || key == 'Q')
+    {
+      Snake[] tempSnek = (Snake[])append(snek, new Snake());
+      
+      System.out.println(snek.length);
+    }
+
+  }
 }
 
 void mousePressed()
@@ -52,14 +67,32 @@ void mousePressed()
 }
 
 class Snake {
-  //the snek will continue its current movement until the timer hits 0
   int timer, snakeWidth, hue, length;
   float x, y, changeInAngle, speed, targetAngle;
   PVector v;
   //length is array of ordered pairs
   float[] body;
-  PVector vFood;
   
+  Snake()
+  {
+    x = ((float)Math.random() * width);
+    y = ((float)Math.random() * height);
+
+    int size = (int)(Math.random() * 150) + 10;
+    body = new float[size * 2];
+    for(int i = 0; i < body.length; i+=2)
+    {
+      body[i] = x;
+      body[i + 1] = y;
+    }
+    v = new PVector((float)Math.random(), (float)Math.random());
+    //sets random speed of snek btwn [0.5, 2.5)
+    speed = (float)Math.random() * 2 + 0.5;
+
+    snakeWidth = (int)(Math.random() * 10) + 5;
+    hue = (int)(Math.random() * 100);
+  }
+
   Snake(float x0, float y0, int colour, int size, int radius)
   {
     x = x0;
@@ -73,13 +106,11 @@ class Snake {
     v = new PVector((float)Math.random(), (float)Math.random());
     //sets random speed of snek btwn [0.5, 2.5)
     speed = (float)Math.random() * 2 + 0.5;
-    speed = 2.5;
-    v.normalize();
-    v.set(v.x * speed, v.y * speed);
+    //v.normalize();
+    //v.set(v.x * speed, v.y * speed);
 
     snakeWidth = radius;
     hue = colour;
-    vFood = new PVector(FoodX - body[0], FoodY - body[1]);
   }
   
   void move()
@@ -91,8 +122,8 @@ class Snake {
         double chance = Math.random();
         if(chance < 0.5)
         {
-          //0.4 chance to make a wider turn
-          if(chance < 0.4)
+          //0.3 chance to make a wider turn
+          if(chance < 0.3)
             changeInAngle = (float)(Math.random() * 0.07) + 0.03;
           else
             //smaller turn
@@ -107,7 +138,7 @@ class Snake {
           timer = (int)(Math.random() * range + 1 * PI / 3 / abs(changeInAngle));
 
           //50% chance to set snake to turn until it is going in the general direction of the Food
-          if (Math.random() < 0.0)
+          if (Math.random() < bias)
           {
             timer = -1;
           }
@@ -120,8 +151,7 @@ class Snake {
     }
     else if(timer < 0) //timer is negative if snake is turning until it is going in the general direction of the Food
     {
-      stroke(40, 80, 80);
-      vFood = new PVector(FoodX - body[0], FoodY - body[1]);
+      PVector vFood = new PVector(FoodX - body[0], FoodY - body[1]);
       float angleOfRot;
       
       float vAngle = getAngle(v.x, v.y);
@@ -146,7 +176,7 @@ class Snake {
       */
       ///////
       
-      if(vAngle != v.heading())
+      //if(vAngle != v.heading())
         //System.out.println(vAngle - v.heading());
       /*
       float vAngle = atan(v.y/v.x);
@@ -224,3 +254,5 @@ class Snake {
     return angle;
   }
 }
+
+
