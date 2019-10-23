@@ -89,7 +89,7 @@ class Snake {
     {
         //chance to either turn or move straight
         double chance = Math.random();
-        if(chance < 0.5)
+        if(chance < 0.0)
         {
           //0.4 chance to make a wider turn
           if(chance < 0.4)
