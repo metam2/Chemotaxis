@@ -89,7 +89,7 @@ class Snake {
     {
         //chance to either turn or move straight
         double chance = Math.random();
-        if(chance < 0.0)
+        if(chance < 0.5)
         {
           //0.4 chance to make a wider turn
           if(chance < 0.4)
@@ -105,9 +105,10 @@ class Snake {
           //rotation is btwn 1pi/3 and 5pi/3
           float range = abs(4 * PI / 3 / changeInAngle);
           timer = (int)(Math.random() * range + 1 * PI / 3 / abs(changeInAngle));
-          
+          timer = 50;
+
           //50% chance to set snake to turn until it is going in the general direction of the Food
-          if (Math.random() < 1.5)
+          if (Math.random() < 0.0)
           {
             timer = -1;
           }
