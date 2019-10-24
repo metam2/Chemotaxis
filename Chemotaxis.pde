@@ -159,7 +159,7 @@ class Snake {
           timer = (int)(Math.random() * 20) + 5;
         }
     }
-    else if(timer < 0) //timer is negative if snake is turning until it is going in the general direction of the Food
+    else if(timer < 0 ) //timer is negative if snake is turning until it is going in the general direction of the Food
     {
       PVector vFood = new PVector(FoodX - body[0], FoodY - body[1]);
       float angleOfRot;
@@ -173,11 +173,11 @@ class Snake {
       {
         angleOfRot = 2 * PI - (vAngle - foodAngle);
       }
-      
       if(angleOfRot >  PI)
-      {
-        changeInAngle = -changeInAngle;
-      }
+            {
+              changeInAngle = -changeInAngle;
+            }
+      
       //////
       /*
       fill(200, 100, 100);
@@ -226,9 +226,10 @@ class Snake {
     body[0] += v.x;
     body[1] += v.y;
     
+    //if(timer)
     v.set(cos(getAngle(v.x, v.y) + changeInAngle), sin(getAngle(v.x, v.y) + changeInAngle));
-    v.normalize();
-    v.set(v.x * speed, v.y * speed);
+    //v.normalize();
+    //v.set(v.x * speed, v.y * speed);
     //v.rotate(changeInAngle);
     
   }
@@ -247,8 +248,16 @@ class Snake {
         fill(hue, 30, 100);
       }
       for(int i = 0; i < body.length; i+=2)
-        ellipse((int)body[i] , (int)body[i + 1] , (int)(snakeWidth * a), (int)(snakeWidth * a));
+        ellipse(body[i] , body[i + 1] , (int)(snakeWidth * a), (int)(snakeWidth * a));
       
+    }
+    if(timer < 0)
+    {
+      stroke(100, 100, 100);
+  fill(0, 80, 80);
+      ellipse((int)body[0] , (int)body[1] , (int)(snakeWidth), (int)(snakeWidth));
+      fill(0, 0, 0);
+      text(changeInAngle, (int)body[0] + 20 , (int)body[1] + 20);
     }
 
   }
@@ -268,13 +277,13 @@ class Snake {
 
 void keyReleased()
 {
-    if(key == 'q')
+    if(key == 'w')
     {
       Snake[] tempSnek = (Snake[])append(snek, new Snake());
       snek = tempSnek;
     }
 
-    if(key == 'w')
+    if(key == 'q')
     {
       if(snek.length > 0)
       snek = (Snake[])shorten(snek);
