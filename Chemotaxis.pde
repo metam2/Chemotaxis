@@ -11,10 +11,11 @@ v.set(v.x * speed, v.y * speed);
 Snake[] snek = new Snake[1];
 int FoodX, FoodY;
 float bias = 0.5;
+int a = 0;
 
 void setup()
 {
-  size(500,500);
+  size(800,800);
   colorMode(HSB, 100);
   for(int i = 0; i < snek.length; i++)
   {
@@ -40,7 +41,7 @@ void draw()
   rect(0, 0, width, height);
   
   stroke(100, 100, 100);
-  fill(200, 80, 80);
+  fill(0, 80, 80);
   ellipse(FoodX, FoodY, 10,10);
   for(int i = 0; i < snek.length; i++)
   {
@@ -50,14 +51,23 @@ void draw()
 
   if(keyPressed)
   {
-    if(key == 'q' || key == 'Q')
+    if(key == 's')
     {
-      Snake[] tempSnek = (Snake[])append(snek, new Snake());
-      
-      System.out.println(snek.length);
+      if(bias < 1)
+        bias += 0.01;
     }
-
+    if(key == 'a')
+    {
+      if(bias > 0)
+        bias -= 0.01;
+    }
   }
+
+  fill((int)(bias * 100), 10, 100);
+  stroke((int)(bias * 100), 20, 100);
+  rect(0, 20, (int)(bias * 800), 20);
+
+
 }
 
 void mousePressed()
@@ -122,8 +132,8 @@ class Snake {
         double chance = Math.random();
         if(chance < 0.5)
         {
-          //0.3 chance to make a wider turn
-          if(chance < 0.3)
+          //0.4 chance to make a wider turn
+          if(chance < 0.4)
             changeInAngle = (float)(Math.random() * 0.07) + 0.03;
           else
             //smaller turn
@@ -137,7 +147,7 @@ class Snake {
           float range = abs(4 * PI / 3 / changeInAngle);
           timer = (int)(Math.random() * range + 1 * PI / 3 / abs(changeInAngle));
 
-          //50% chance to set snake to turn until it is going in the general direction of the Food
+          //chance to set snake to turn until it is going in the general direction of the Food
           if (Math.random() < bias)
           {
             timer = -1;
@@ -256,3 +266,18 @@ class Snake {
 }
 
 
+void keyReleased()
+{
+    if(key == 'q')
+    {
+      Snake[] tempSnek = (Snake[])append(snek, new Snake());
+      snek = tempSnek;
+    }
+
+    if(key == 'w')
+    {
+      if(snek.length > 0)
+      snek = (Snake[])shorten(snek);
+    }
+
+}
