@@ -162,21 +162,35 @@ class Snake {
     else if(timer < 0 ) //timer is negative if snake is turning until it is going in the general direction of the Food
     {
       PVector vFood = new PVector(FoodX - body[0], FoodY - body[1]);
-      float angleOfRot;
+      double angleOfRot;
       
       float vAngle = getAngle(v.x, v.y);
       float foodAngle = getAngle(vFood.x, vFood.y);
-        
+      if(foodAngle > PI)
+        {
+          fill(0, 100, 100);
+          text((float)vAngle, (int)body[0] + 70 , (int)body[1] + 40);
+          System.out.println(vAngle);
+        }
+
+      
       if ((vAngle < foodAngle && changeInAngle > 0) ||  (vAngle > foodAngle && changeInAngle < 0))
         angleOfRot = abs(vAngle - foodAngle);
       else 
       {
         angleOfRot = 2 * PI - (vAngle - foodAngle);
       }
-      if(angleOfRot >  PI)
+
+      //if(PI - 0.2 < angleOfRot || angleOfRot >  PI + 0.2)
+      if(angleOfRot > PI)
             {
               changeInAngle = -changeInAngle;
             }
+
+            fill(0, 0, 0);
+            boolean ahaha = angleOfRot > PI;
+            if(ahaha)
+              text((float)angleOfRot, (int)body[0] + 40 , (int)body[1] + 40);
       
       //////
       /*
