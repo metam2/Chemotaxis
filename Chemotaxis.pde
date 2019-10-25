@@ -1,14 +1,4 @@
-/*//////////
-mag and heading doesnt work.....
-heading atan(vFood.y/vFood.x)
-atan(v.y/v.x);
-v.normalize();
-v.set(v.x * speed, v.y * speed);
-
-*/
-
-// add or remove snesk; increase/decrease bias with meter showing levels; set speed into parameter
-Snake[] snek = new Snake[1];
+Snake[] snek = new Snake[10];
 int FoodX, FoodY;
 float bias = 0.5;
 int a = 0;
@@ -19,15 +9,6 @@ void setup()
   colorMode(HSB, 100);
   for(int i = 0; i < snek.length; i++)
   {
-    /*
-    float x, y;
-    x = ((float)Math.random() * width);
-    y = ((float)Math.random() * height);
-    int colour = (int)(Math.random() * 100);
-    int size = (int)(Math.random() * 150) + 10;
-    int radius = (int)(Math.random() * 10) + 5;
-    snek[i] = new Snake(x, y, colour, size, radius);
-    */
     snek[i] = new Snake();
   }
   FoodX = (int)(Math.random() * width);
@@ -80,7 +61,7 @@ class Snake {
   int timer, snakeWidth, hue, length;
   float x, y, changeInAngle, speed, targetAngle;
   PVector v;
-  //length is array of ordered pairs
+  //body is array of ordered pairs
   float[] body;
   
   Snake()
@@ -116,8 +97,6 @@ class Snake {
     v = new PVector((float)Math.random(), (float)Math.random());
     //sets random speed of snek btwn [0.5, 2.5)
     speed = (float)Math.random() * 2 + 0.5;
-    //v.normalize();
-    //v.set(v.x * speed, v.y * speed);
 
     snakeWidth = radius;
     hue = colour;
@@ -166,12 +145,6 @@ class Snake {
       
       float vAngle = getAngle(v.x, v.y);
       float foodAngle = getAngle(vFood.x, vFood.y);
-      if(foodAngle > PI)
-        {
-          fill(0, 100, 100);
-          text((float)vAngle, (int)body[0] + 70 , (int)body[1] + 40);
-          System.out.println(vAngle);
-        }
 
       if(abs(vAngle - foodAngle) == PI)
         println(vAngle);
@@ -183,41 +156,11 @@ class Snake {
         angleOfRot = 2 * PI - abs(vAngle - foodAngle);
       }
       
-
-      //if(PI - 0.2 < angleOfRot || angleOfRot >  PI + 0.2)
       if(angleOfRot > PI)
-            {
-              changeInAngle = -changeInAngle;
-            }
+        changeInAngle = -changeInAngle;
 
-            fill(0, 0, 0);
-            if(angleOfRot > PI)
-              text((float)angleOfRot, (int)body[0] + 40 , (int)body[1] + 40);
-      
-      //////
-      /*
-      fill(200, 100, 100);
-      rect(0, height / 2, 10, v.heading() * height / 2 / PI);
-      rect(10, height / 2, 20, vFood.heading() * height / 2 / PI);
-      */
-      ///////
-      
-      //if(vAngle != v.heading())
-        //System.out.println(vAngle - v.heading());
-      /*
-      float vAngle = atan(v.y/v.x);
-      float foodAngle = atan(vFood.x/vFood.y);
-      if (v.x < 0 && v.y < 0)
-        vAngle -= PI;
-      else if(v.x < 0 && v.y > 0)
-        vAngle += PI;
-      if (vFood.x < 0 && vFood.y < 0)
-        foodAngle -= PI;
-      else if(vFood.x < 0 && vFood.y > 0)
-        foodAngle += PI;
-        */
-        
-      //if(atan(v.y/v.x) >= atan(vFood.y/vFood.x) - 0.25 && atan(v.y/v.x) <= atan(vFood.y/vFood.x) + 0.25)
+      fill(0, 0, 0);
+
       if(vAngle >= foodAngle - 0.25 && vAngle <= foodAngle + 0.25)
       {
         timer = 0;
@@ -225,7 +168,6 @@ class Snake {
     }
     else
       timer--;
-    //if tan same sign; else if cos same sign; else
     
     if(body[0] < 0 )
       v.set((float)Math.random(), v.y);
@@ -242,11 +184,7 @@ class Snake {
     body[0] += v.x;
     body[1] += v.y;
     
-    //if(timer)
     v.set(cos(getAngle(v.x, v.y) + changeInAngle), sin(getAngle(v.x, v.y) + changeInAngle));
-    //v.normalize();
-    //v.set(v.x * speed, v.y * speed);
-    //v.rotate(changeInAngle);
     
   }
   
@@ -267,14 +205,6 @@ class Snake {
         ellipse(body[i] , body[i + 1] , (int)(snakeWidth * a), (int)(snakeWidth * a));
       
     }
-    if(timer < 0)
-    {
-      stroke(100, 100, 100);
-  fill(0, 80, 80);
-      ellipse((int)body[0] , (int)body[1] , (int)(snakeWidth), (int)(snakeWidth));
-      fill(0, 0, 0);
-      text(changeInAngle, (int)body[0] + 20 , (int)body[1] + 20);
-    }
 
   }
   
@@ -285,14 +215,7 @@ class Snake {
       angle -= PI;
     else if(xComp <= 0 && yComp >= 0)
       angle += PI;
-      
-      /*
-    if(angle < 0)
-      angle += 2*PI;
 
-    if(angle > 2 * PI)
-      println("U EFFED UP");
-    */
     return angle;
   }
 }
