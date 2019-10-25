@@ -173,13 +173,16 @@ class Snake {
           System.out.println(vAngle);
         }
 
+      if(abs(vAngle - foodAngle) == PI)
+        println(vAngle);
       
       if ((vAngle < foodAngle && changeInAngle > 0) ||  (vAngle > foodAngle && changeInAngle < 0))
         angleOfRot = abs(vAngle - foodAngle);
       else 
       {
-        angleOfRot = 2 * PI - (vAngle - foodAngle);
+        angleOfRot = 2 * PI - abs(vAngle - foodAngle);
       }
+      
 
       //if(PI - 0.2 < angleOfRot || angleOfRot >  PI + 0.2)
       if(angleOfRot > PI)
@@ -188,8 +191,7 @@ class Snake {
             }
 
             fill(0, 0, 0);
-            boolean ahaha = angleOfRot > PI;
-            if(ahaha)
+            if(angleOfRot > PI)
               text((float)angleOfRot, (int)body[0] + 40 , (int)body[1] + 40);
       
       //////
@@ -284,6 +286,13 @@ class Snake {
     else if(xComp <= 0 && yComp >= 0)
       angle += PI;
       
+      /*
+    if(angle < 0)
+      angle += 2*PI;
+
+    if(angle > 2 * PI)
+      println("U EFFED UP");
+    */
     return angle;
   }
 }
